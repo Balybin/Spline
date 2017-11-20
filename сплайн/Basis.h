@@ -9,7 +9,7 @@ class Basis
 public:
 	double Psi(int i, double x, double y, double hx, double hy, double xi, double yi)
 	{
-		return Fi(Myu(i), x, hx, xi)*Fi(Nyu(i), y, hy, yi);
+		return Fi(Myu(i), xi, hx, x)*Fi(Nyu(i), yi, hy, y);
 	}
 	double Psi(int i, double xi, double hx, double x)//перегрузка для одномерной задачи
 	{
@@ -20,7 +20,7 @@ public:
 private:
 	int Myu(int i)
 	{
-		return 2 * ((int)((i - 1) / 4) % 2) + ((i - 1) % 2) + 1;
+		return 2 * ((int)((i) / 4) % 2) + ((i) % 2);
 	}
 	int Nyu(int i)
 	{

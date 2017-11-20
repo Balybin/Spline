@@ -3,48 +3,56 @@
 
 void Task::matrixFilling()
 {
-	double hx;
+	int sizeX = grid.X.size() - 1, sizeY = grid.Y.size() - 1;
+	double hx, hy;
 	double localMatrix[4][4];
 	vector<int> indexOfPoints;
 	vector<bool> usedPoints;
 	usedPoints.resize(grid.F.size(), false);
-	int indexInMatrix[4];
-	int cycleCounter = grid.greedX.size() - 1;
-	for (int i = 0; i < cycleCounter; ++i)
+	int indexInMatrix[8];
+	for (int j = 0; j < sizeY; ++j)
 	{
-		indexOfPoints.resize(0);
-		for (int k = 0; k < grid.X.size() && grid.X[k] <= grid.greedX[i + 1]; ++k)
+		for (int i = 0; i < sizeX; ++i)
 		{
-			if (grid.X[k] >= grid.greedX[i] && !usedPoints[k])
+			indexOfPoints.resize(0);
+			for (int k = 0; k < grid.points.size() && grid.points[k].x <= grid.X[i + 1] && grid.points[k].y <= grid.Y[j + 1]; ++k)
 			{
-				indexOfPoints.push_back(k);
-				usedPoints[k] = true;
-			}
-		}
-		if (indexOfPoints.size() == 0)
-		{ 
-			cout << "I can't find points on interval [" << grid.greedX[i]
-				<< ", " << grid.greedX[i+1] << "] you must fix it, before do something." << endl;
-			cin.get();
-			system("exit");
-		}
-		hx = grid.greedX[i + 1] - grid.greedX[i];
-		indexInMatrix[0] = 2 * i;
-		indexInMatrix[1] = 2 * i + 1;
-		indexInMatrix[2] = 2 * i + 2;
-		indexInMatrix[3] = 2 * i + 3;
-		for (int k = 0; k < indexOfPoints.size(); ++k)
-		{
-			for (int ii = 0; ii < 4; ++ii)
-			{
-				for (int jj = 0; jj < 4; ++jj)
+				if (grid.points[k].x >= grid.X[i] && grid.points[k].y >= grid.Y[i] && !usedPoints[k])
 				{
-					a.setEl(indexInMatrix[ii], indexInMatrix[jj],
-						basis.Psi(ii, grid.greedX[i], hx, grid.X[indexOfPoints[k]])*
-						basis.Psi(jj, grid.greedX[i], hx, grid.X[indexOfPoints[k]]));
+					indexOfPoints.push_back(k);
+					usedPoints[k] = true;
 				}
-				f[indexInMatrix[ii]] += basis.Psi(ii, grid.greedX[i], hx,
-					grid.X[indexOfPoints[k]])*grid.F[indexOfPoints[k]];
+			}
+			if (indexOfPoints.size() == 0)
+			{
+				cout << "I can't find points on interval [" << grid.X[i]
+					<< ", " << grid.X[i + 1] << "] * [" << grid.Y[i] <<", "
+					<< grid.Y[i+1] <<"]\n you must fix it, before do something." << endl;
+				cin.get();
+				system("exit");
+			}
+			hx = grid.X[i + 1] - grid.X[i];
+			hy = grid.Y[i + 1] - grid.Y[i];
+			indexInMatrix[0] = 2 * grid.calculatePosistion(i,j);
+			indexInMatrix[1] = 2 * grid.calculatePosistion(i, j) + 1;
+			indexInMatrix[2] = 2 * grid.calculatePosistion(i, j + 1);
+			indexInMatrix[3] = 2 * grid.calculatePosistion(i, j + 1) + 1;
+			indexInMatrix[4] = 2 * grid.calculatePosistion(i + 1, j);
+			indexInMatrix[5] = 2 * grid.calculatePosistion(i + 1, j) + 1;
+			indexInMatrix[6] = 2 * grid.calculatePosistion(i + 1, j + 1);
+			indexInMatrix[7] = 2 * grid.calculatePosistion(i + 1, j + 1) + 1;
+			for (int k = 0; k < indexOfPoints.size(); ++k)
+			{
+				for (int ii = 0; ii < 8; ++ii)
+				{
+					for (int jj = 0; jj < 8; ++jj)
+					{
+						a.setEl(indexInMatrix[ii], indexInMatrix[jj], basis.Psi(ii, grid.X[i], grid.Y[j],
+							hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y));
+					}
+					f[indexInMatrix[ii]] += basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
+						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*grid.F[indexOfPoints[k]];
+				}
 			}
 		}
 	}

@@ -81,7 +81,7 @@ int Matrix::setEl(int i, int j, double El)
 }
 void Matrix::profileDefining(ListOfAdjacency listOfAdjacency, Grid grid)
 {
-	n = 2 * grid.greedX.size();
+	n = 2 * grid.X.size()*grid.Y.size();
 	int k = 0;
 	listOfAdjacency.fillingList(grid);
 	ia.reserve(n + 1);

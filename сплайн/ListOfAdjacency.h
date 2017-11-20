@@ -14,5 +14,5 @@ public:
 
 	vector<vector<int> > list;
 	void fillingList(Grid grid);
-	int addToList(int i, int j);
+	int addToList(int k, int k1);
 };

@@ -4,11 +4,16 @@
 
 using namespace std;
 
+struct Point
+{
+	double x, y;
+};
+
 class Grid
 {
 public:
-	vector<double> X, F;//, Y; пока для одномерной.
-	vector<double> greedX;
+	vector<Point> points;
+	vector<double> X, Y, F;
 	void input();
-	
+	int calculatePosistion(int i, int j);
 };
