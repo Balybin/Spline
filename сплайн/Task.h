@@ -16,7 +16,7 @@ public:
 	Basis basis;
 	void matrixFilling();
 	void make();
-	void printSpline(double h, vector<double> result);
+	void printSpline(double hx, double hy, vector<double> result);
 };
 
 extern vector<double> makeSLAU(vector<double> &_di, vector<double> &_al, vector<double> &_au, vector<int> &_ia, vector<int> &_ja, vector<double> &_F);

@@ -13,8 +13,22 @@ public:
 	}
 	double Psi(int i, double xi, double hx, double x)//перегрузка для одномерной задачи
 	{
-
 		return Fi(i, xi, hx, x);
+	}
+	double Psi(Grid grid, int i, double xi, double yi)
+	{
+		int i = 0, j = 0;
+		if (xi<grid.X[0] || xi>grid.X[grid.X.size() - 1] || yi<grid.Y[0] || yi>grid.Y[grid.Y.size() - 1])
+		{
+			cout << "Error in func Psi. Press any key to exit." << endl;
+			cin.get();
+			system("exit");
+		}
+		while (grid.X[i] <= xi)
+			++i;
+		while (grid.Y[j] <= yi)
+			++j;
+		return Psi(i, grid.X[i - 1], grid.Y[j - 1], grid.X[i] - grid.X[i - 1], grid.Y[j] - grid.Y[j - 1], xi, yi);
 
 	}
 private:

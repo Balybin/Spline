@@ -39,17 +39,17 @@ void Task::matrixFilling()
 			indexInMatrix[1] = buf + 1;
 			indexInMatrix[2] = buf + 2;
 			indexInMatrix[3] = buf + 3;
-			int buf = 4 * grid.calculatePosistion(i, j + 1);
+			buf = 4 * grid.calculatePosistion(i, j + 1);
 			indexInMatrix[4] = buf;
 			indexInMatrix[5] = buf + 1;
 			indexInMatrix[6] = buf + 2;
 			indexInMatrix[7] = buf + 3;
-			int buf = 4 * grid.calculatePosistion(i + 1, j);
+			buf = 4 * grid.calculatePosistion(i + 1, j);
 			indexInMatrix[8] = buf;
 			indexInMatrix[9] = buf + 1;
 			indexInMatrix[10] = buf + 2;
 			indexInMatrix[11] = buf + 3;
-			int buf = 4 * grid.calculatePosistion(i + 1, j + 1);
+			buf = 4 * grid.calculatePosistion(i + 1, j + 1);
 			indexInMatrix[12] = buf;
 			indexInMatrix[13] = buf + 1;
 			indexInMatrix[14] = buf + 2;
@@ -88,48 +88,44 @@ void Task::make()
 		out << result[i] << endl;
 	}
 	out.close();*/
-	printSpline(0.05, result);
+	printSpline(0.05, 0.05, result);
 }
 
-void Task::printSpline(double h, vector<double> result)
+void Task::printSpline(double hx, double hy, vector<double> result)
 {
-	int maxI = grid.X.size() - 1, maxJ = grid.Y.size() - 1;
+	int maxI = grid.X.size(), maxJ = grid.Y.size();
+	int kMax = grid.points.size();
 	ofstream outX("SplineX.txt");
 	ofstream outF("SplineF.txt");
-	double x, hx, summ, y, hy;
-	/*int k;
-	for (k = 0; k < grid.greedX.size() - 1; ++k)
+	ofstream outY("SplineF.txt");
+	vector<bool> isUsed;
+	vector<int> indexesOfPoints;
+	isUsed.resize(kMax, false);
+	double summ,hXforBasis,hYforBasis;
+	for (double y = grid.Y[0]; y < grid.Y[maxJ] + 1e-10; y += hy)
 	{
-		hx = grid.greedX[k + 1] - grid.greedX[k];
-		x = grid.greedX[k];
-
-		while (x < grid.greedX[k + 1] - 1e-10)
+		for (double x = grid.X[0]; x < grid.X[maxI] + 1e-10; x += hx)
 		{
+			int i = 0, j = 0;
 			summ = 0;
-			summ += result[  2 * k  ] * basis.Psi(0, grid.greedX[k], hx, x);
-			summ += result[2 * k + 1] * basis.Psi(1, grid.greedX[k], hx, x);
-			summ += result[2 * k + 2] * basis.Psi(2, grid.greedX[k], hx, x);
-			summ += result[2 * k + 3] * basis.Psi(3, grid.greedX[k], hx, x);
-			outX << x << endl;
+			while (grid.X[i] <= x)
+				++i;
+			--i;
+			hXforBasis = grid.X[i + 1] - grid.X[i];
+			while (grid.Y[j] <= y)
+				++j;
+			--j;
+			hYforBasis = grid.Y[j + 1] - grid.Y[j];
+			for (int k = 0; k < 16; ++k)
+			{
+				summ += basis.Psi(k, grid.X[i], grid.Y[j], hXforBasis, hYforBasis, x, y);
+			}
+			if(x == grid.X[0]) outX << x << endl;
 			outF << summ << endl;
-			x += h;
 		}
-	}
-	--k;
-	summ = 0;
-	summ += result[2 * k] * basis.Psi(0, grid.greedX[k], hx, x);
-	summ += result[2 * k + 1] * basis.Psi(1, grid.greedX[k], hx, x);
-	summ += result[2 * k + 2] * basis.Psi(2, grid.greedX[k], hx, x);
-	summ += result[2 * k + 3] * basis.Psi(3, grid.greedX[k], hx, x);
-	outX << x << endl;
-	outF << summ << endl;*/
-	for (int i = 0; i < maxI; ++i)
-	{
-		for (int j = 0; j < maxJ; ++j)
-		{
-
-		}
+		outY << y << endl;
 	}
 	outF.close();
 	outX.close();
+	outY.close();
 }
