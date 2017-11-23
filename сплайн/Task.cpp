@@ -15,9 +15,11 @@ void Task::matrixFilling()
 		for (int i = 0; i < sizeX; ++i)
 		{
 			indexOfPoints.resize(0);
-			for (int k = 0; k < grid.points.size() && grid.points[k].x <= grid.X[i + 1] && grid.points[k].y <= grid.Y[j + 1]; ++k)
+			for (int k = 0; k < grid.points.size(); ++k)
 			{
-				if (grid.points[k].x >= grid.X[i] && grid.points[k].y >= grid.Y[i] && !usedPoints[k])
+				if (!usedPoints[k] &&
+					grid.points[k].x >= grid.X[i] && grid.points[k].x <= grid.X[i + 1] &&
+					grid.points[k].y >= grid.Y[j] && grid.points[k].y <= grid.Y[j + 1]  )
 				{
 					indexOfPoints.push_back(k);
 					usedPoints[k] = true;
@@ -26,25 +28,25 @@ void Task::matrixFilling()
 			if (indexOfPoints.size() == 0)
 			{
 				cout << "I can't find points on interval [" << grid.X[i]
-					<< ", " << grid.X[i + 1] << "] * [" << grid.Y[i] << ", "
-					<< grid.Y[i + 1] << "]\n you must fix it, before do something." << endl
+					<< ", " << grid.X[i + 1] << "] * [" << grid.Y[j] << ", "
+					<< grid.Y[j + 1] << "]\n you must fix it, before do something." << endl
 					<< "Press any key, to exit." << endl;
 				cin.get();
 				system("exit");
 			}
 			hx = grid.X[i + 1] - grid.X[i];
-			hy = grid.Y[i + 1] - grid.Y[i];
+			hy = grid.Y[j + 1] - grid.Y[j];
 			int buf = 4 * grid.calculatePosistion(i, j);
 			indexInMatrix[0] = buf;
 			indexInMatrix[1] = buf + 1;
 			indexInMatrix[2] = buf + 2;
 			indexInMatrix[3] = buf + 3;
-			buf = 4 * grid.calculatePosistion(i, j + 1);
+			buf = 4 * grid.calculatePosistion(i + 1, j);
 			indexInMatrix[4] = buf;
 			indexInMatrix[5] = buf + 1;
 			indexInMatrix[6] = buf + 2;
 			indexInMatrix[7] = buf + 3;
-			buf = 4 * grid.calculatePosistion(i + 1, j);
+			buf = 4 * grid.calculatePosistion(i, j + 1);
 			indexInMatrix[8] = buf;
 			indexInMatrix[9] = buf + 1;
 			indexInMatrix[10] = buf + 2;
@@ -93,7 +95,7 @@ void Task::make()
 
 void Task::printSpline(double hx, double hy, vector<double> result)
 {
-	int maxI = grid.X.size(), maxJ = grid.Y.size();
+	int maxI = grid.X.size() - 1, maxJ = grid.Y.size() - 1;
 	int kMax = grid.points.size();
 	ofstream outX("SplineX.txt");
 	ofstream outF("SplineF.txt");
@@ -108,11 +110,12 @@ void Task::printSpline(double hx, double hy, vector<double> result)
 		{
 			int i = 0, j = 0;
 			summ = 0;
-			while (grid.X[i] <= x)
+			while (grid.X[i] < x)
 				++i;
 			--i;
 			hXforBasis = grid.X[i + 1] - grid.X[i];
-			while (grid.Y[j] <= y)
+			if (y > grid.Y[maxJ]) y = grid.Y[maxJ];
+			while (grid.Y[j] <= y && j <= maxJ)
 				++j;
 			--j;
 			hYforBasis = grid.Y[j + 1] - grid.Y[j];

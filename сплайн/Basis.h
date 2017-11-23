@@ -15,7 +15,7 @@ public:
 	{
 		return Fi(i, xi, hx, x);
 	}
-	double Psi(Grid grid, int i, double xi, double yi)
+	/*double Psi(Grid grid, int k, double xi, double yi)
 	{
 		int i = 0, j = 0;
 		if (xi<grid.X[0] || xi>grid.X[grid.X.size() - 1] || yi<grid.Y[0] || yi>grid.Y[grid.Y.size() - 1])
@@ -28,9 +28,9 @@ public:
 			++i;
 		while (grid.Y[j] <= yi)
 			++j;
-		return Psi(i, grid.X[i - 1], grid.Y[j - 1], grid.X[i] - grid.X[i - 1], grid.Y[j] - grid.Y[j - 1], xi, yi);
+		return Psi(k, grid.X[i - 1], grid.Y[j - 1], grid.X[i] - grid.X[i - 1], grid.Y[j] - grid.Y[j - 1], xi, yi);
 
-	}
+	}*/
 private:
 	int Myu(int i)
 	{
@@ -38,7 +38,7 @@ private:
 	}
 	int Nyu(int i)
 	{
-		return 2 * (int)((i - 1) / 8) + ((int)((i - 1) / 2) % 2) + 1;
+		return 2 * (int)((i) / 8) + ((int)((i) / 2) % 2);
 	}
 	double Ksi(double xi, double h, double x)
 	{

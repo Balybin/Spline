@@ -37,17 +37,21 @@ void Grid::input()
 		file >> buf;
 		Y.push_back(buf);
 	}
-	Qf = Qy*Qx;
+	/*Qf = Qy*Qx;
 	for (int i = 0; i < Qf; ++i)
 	{
 		file >> buf;
 		F.push_back(buf);
-	}
-	for (int i = 0; i < Qf; ++i)
+	}*/
+	for (double y = -2; y < 2 + 1e-10; y += 0.25)
 	{
-		Point point;
-		file >> point.x >> point.y;
-		points.push_back(point);
+		for (double x = -2; x < 2 + 1e-10; x += 0.25)
+		{
+			Point point;
+			point.x = x; point.y = y;
+			points.push_back(point);
+			F.push_back(x*x + y*y);
+		}
 	}
 	file.close();
 }
