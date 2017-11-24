@@ -99,7 +99,7 @@ void Task::printSpline(double hx, double hy, vector<double> result)
 	int kMax = grid.points.size();
 	ofstream outX("SplineX.txt");
 	ofstream outF("SplineF.txt");
-	ofstream outY("SplineF.txt");
+	ofstream outY("SplineY.txt");
 	vector<bool> isUsed;
 	vector<int> indexesOfPoints;
 	isUsed.resize(kMax, false);
@@ -110,14 +110,12 @@ void Task::printSpline(double hx, double hy, vector<double> result)
 		{
 			int i = 0, j = 0;
 			summ = 0;
-			while (grid.X[i] < x)
+			while (grid.X[i] < x && i < maxI - 1)
 				++i;
-			--i;
 			hXforBasis = grid.X[i + 1] - grid.X[i];
 			if (y > grid.Y[maxJ]) y = grid.Y[maxJ];
-			while (grid.Y[j] <= y && j <= maxJ)
+			while (grid.Y[j] <= y && j < maxJ - 1)
 				++j;
-			--j;
 			hYforBasis = grid.Y[j + 1] - grid.Y[j];
 			for (int k = 0; k < 16; ++k)
 			{
