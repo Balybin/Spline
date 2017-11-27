@@ -82,7 +82,7 @@ void Task::make()
 	a.profileDefining(list, grid);
 	f.resize(4 * grid.X.size() * grid.Y.size(), 0);
 	matrixFilling();
-	//a.outMatrix();
+	a.outMatrix();
 	result = makeSLAU(a.di, a.al, a.au, a.ia, a.ja, f);
 	/*ofstream out("Result.txt");
 	for (int i = 0; i < result.size(); ++i)
@@ -112,16 +112,19 @@ void Task::printSpline(double hx, double hy, vector<double> result)
 			summ = 0;
 			while (grid.X[i] < x && i < maxI - 1)
 				++i;
+			if (i > 0) --i;
 			hXforBasis = grid.X[i + 1] - grid.X[i];
 			if (y > grid.Y[maxJ]) y = grid.Y[maxJ];
-			while (grid.Y[j] <= y && j < maxJ - 1)
+			while (grid.Y[j] < y && j < maxJ - 1)
 				++j;
+			if (j > 0) --j;
 			hYforBasis = grid.Y[j + 1] - grid.Y[j];
+			int NumOfEl =4 * grid.calculatePosistion(i, j);
 			for (int k = 0; k < 16; ++k)
 			{
-				summ += basis.Psi(k, grid.X[i], grid.Y[j], hXforBasis, hYforBasis, x, y);
+				summ += result[NumOfEl + k] * basis.Psi(k, grid.X[i], grid.Y[j], hXforBasis, hYforBasis, x, y);
 			}
-			if(x == grid.X[0]) outX << x << endl;
+			if(y == grid.Y[0]) outX << x << endl;
 			outF << summ << endl;
 		}
 		outY << y << endl;

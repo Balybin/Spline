@@ -27,10 +27,10 @@ void ListOfAdjacency::fillingList(Grid grid)
 			int k = grid.calculatePosistion(i, j);
 			for (int j1 = -1; j1 < 2; ++j1)
 			{
-				for (int i1 = 0; i1 < 1; ++i1)
+				for (int i1 = -1; i1 < 1; ++i1)
 				{
 					int ii = i + i1, jj = j + j1, k1 = grid.calculatePosistion(ii, jj);
-					if (ii < sizeX && jj < sizeY && k1 <= k) addToList(k, k1);
+					if (ii<sizeX && jj<sizeY && k1 <= k && ii>=0 && jj>=0) addToList(k, k1);
 				}
 			}
 		//list[i].push_back(i - 1);
@@ -56,10 +56,11 @@ int ListOfAdjacency::addToList(int k, int k1)
 	}
 	else //(k1 < k)
 	{
-		int max = number + 4;
-		for (int i = number; i < max; ++i)
+		int maxI = number + 4;
+		int maxJ = 4 * k1 + 4;
+		for (int i = number; i < maxI; ++i)
 		{
-			for (int j = number; j < max; ++j)
+			for (int j = 4 * k1; j < maxJ; ++j)
 			{
 				list[i].push_back(j);
 			}
