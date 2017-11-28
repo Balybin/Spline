@@ -31,7 +31,6 @@ public:
 		return Psi(k, grid.X[i - 1], grid.Y[j - 1], grid.X[i] - grid.X[i - 1], grid.Y[j] - grid.Y[j - 1], xi, yi);
 
 	}*/
-private:
 	int Myu(int i)
 	{
 		return 2 * ((int)((i) / 4) % 2) + ((i) % 2);
@@ -40,6 +39,8 @@ private:
 	{
 		return 2 * (int)((i) / 8) + ((int)((i) / 2) % 2);
 	}
+
+private:
 	double Ksi(double xi, double h, double x)
 	{
 		return (x - xi) / h;

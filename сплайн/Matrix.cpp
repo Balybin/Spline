@@ -11,7 +11,8 @@ void Matrix::outMatrix()
 		for (int j = 0; j < n; ++j)
 		{
 			buf = GetEl(i, j);
-			out << fixed << setprecision(4) << buf << "\t";
+			if (buf >= 0) out << 0;
+			out << fixed << setprecision(4) << buf << "\t\t";
 		}
 		out << endl;
 	}

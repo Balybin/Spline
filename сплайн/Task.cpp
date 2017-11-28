@@ -78,7 +78,6 @@ void Task::make()
 {
 	vector<double> result;
 	grid.input();
-	list.fillingList(grid);
 	a.profileDefining(list, grid);
 	f.resize(4 * grid.X.size() * grid.Y.size(), 0);
 	matrixFilling();

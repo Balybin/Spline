@@ -20,17 +20,17 @@ void ListOfAdjacency::fillingList(Grid grid)
 	int sizeX = grid.X.size(), sizeY = grid.Y.size();
 	int maxCount = sizeX * sizeY;
 	list.resize(4 * grid.X.size()* grid.Y.size());
-	for (int i = 0; i < sizeX; ++i)
+	for (int j = 0; j < sizeY; ++j)
 	{
-		for (int j = 0; j < sizeY; ++j)
+		for (int i = 0; i < sizeX; ++i)
 		{
 			int k = grid.calculatePosistion(i, j);
-			for (int j1 = -1; j1 < 2; ++j1)
+			for (int j1 = -1; j1 < 1; ++j1)
 			{
-				for (int i1 = -1; i1 < 1; ++i1)
+				for (int i1 = -1; i1 < 2; ++i1)
 				{
 					int ii = i + i1, jj = j + j1, k1 = grid.calculatePosistion(ii, jj);
-					if (ii<sizeX && jj<sizeY && k1 <= k && ii>=0 && jj>=0) addToList(k, k1);
+					if (k1 != -1 && k1 <= k) addToList(k, k1);
 				}
 			}
 		//list[i].push_back(i - 1);
