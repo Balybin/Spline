@@ -38,8 +38,8 @@ void Grid::input()
 		Y.push_back(buf);
 	}
 
-	/*Qf = Qy*Qx;
-	Point Pbuf;
+	Qf = Qy*Qx;
+	/*Point Pbuf;
 	for (int i = 0; i < Qf; ++i)
 	{
 		file >> buf >> Pbuf.x >> Pbuf.y;
@@ -53,8 +53,9 @@ void Grid::input()
 			Point point;
 			point.x = x; point.y = y;
 			points.push_back(point);
-			F.push_back(x*x*x + y*y*y);
+			F.push_back(x*x);
 		}
+	//
 	}
 	file.close();
 }

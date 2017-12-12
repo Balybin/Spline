@@ -45,6 +45,11 @@ public:
 		return secondCompMatrix(Nyu(i), Myu(i), h);
 	}
 
+	double  thirdComp(int i, double h)
+	{
+		return thirdCompMatrix(Nyu(i), Myu(i), h);
+	}
+
 	double secondCompMatrix(int i, int j, double h)
 	{
 		int index = 4 * i + j;
@@ -103,8 +108,70 @@ public:
 			cout << "TY CHE DAUN?" << endl;
 			cin.get();
 			break;
-			return var/(30 * h);
 		}
+		return var / (30 * h);
+	}
+
+	double thirdCompMatrix(int i, int j, double h)
+	{
+		int index = 4 * i + j;
+		double var;
+		switch (index)
+		{
+		case 0:
+			var = 60/(h*h*h);
+			break;
+		case 1:
+			var = 30 / (h*h);
+			break;
+		case 2:
+			var = -60 / (h*h*h);
+			break;
+		case 3:
+			var = 30 / (h*h);
+			break;
+		case 4:
+			var = 30 / (h*h);
+			break;
+		case 5:
+			var = 16 / h;
+			break;
+		case 6:
+			var = -30 / (h*h);
+			break;
+		case 7:
+			var = 14 / h;
+			break;
+		case 8:
+			var = -60 / (h*h*h);
+			break;
+		case 9:
+			var = -30 / (h*h);
+			break;
+		case 10:
+			var = 60 / (h*h*h);
+			break;
+		case 11:
+			var = -30 / (h*h);
+			break;
+		case 12:
+			var = 30 / (h*h);
+			break;
+		case 13:
+			var = 14 / h;
+			break;
+		case 14:
+			var = -30 / (h*h);
+			break;
+		case 15:
+			var = 16 / h;
+			break;
+		default:
+			cout << "TY CHE DAUN?" << endl;
+			cin.get();
+			break;
+		}
+		return var;
 	}
 
 private:

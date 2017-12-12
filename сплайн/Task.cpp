@@ -66,7 +66,12 @@ void Task::matrixFilling()
 							hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*
 							basis.Psi(jj, grid.X[i], grid.Y[j],
 								hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)
-							+ basis.secondComp(ii, hx)*basis.secondComp(jj, hy));
+							/*alpha*/+0 * basis.secondComp(ii, hx)*basis.secondComp(jj, hy)
+							/*beta*/+0 * basis.thirdComp(ii, hx)*basis.thirdComp(jj, hy));/*
+						cout << basis.secondComp(ii, hx) << endl;
+						cout << basis.secondComp(jj, hy) << endl;
+						cout << basis.secondComp(ii, hx)*basis.secondComp(jj, hx) << endl;
+						cin.get();*/
 					}
 					f[indexInMatrix[ii]] += basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
 						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*grid.F[indexOfPoints[k]];
