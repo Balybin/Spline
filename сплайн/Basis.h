@@ -40,6 +40,73 @@ public:
 		return 2 * (int)((i) / 8) + ((int)((i) / 2) % 2);
 	}
 
+	double  secondComp(int i, double h)
+	{
+		return secondCompMatrix(Nyu(i), Myu(i), h);
+	}
+
+	double secondCompMatrix(int i, int j, double h)
+	{
+		int index = 4 * i + j;
+		double var;
+		switch (index)
+		{
+		case 0:
+			var = 36;
+			break;
+		case 1:
+			var = 3 * h;
+			break;
+		case 2:
+			var = -36;
+			break;
+		case 3:
+			var = 3 * h;
+			break;
+		case 4:
+			var = 3 * h;
+			break;
+		case 5:
+			var = 4 * h *h;
+			break;
+		case 6:
+			var = -3 * h;
+			break;
+		case 7:
+			var = -h * h;
+			break;
+		case 8:
+			var = -36;
+			break;
+		case 9:
+			var = -3 * h;
+			break;
+		case 10:
+			var = 36;
+			break;
+		case 11:
+			var = -3 * h;
+			break;
+		case 12:
+			var = 3 * h;
+			break;
+		case 13:
+			var = -h * h;
+			break;
+		case 14:
+			var = -3 * h;
+			break;
+		case 15:
+			var = 4 * h * h;
+			break;
+		default:
+			cout << "TY CHE DAUN?" << endl;
+			cin.get();
+			break;
+			return var/(30 * h);
+		}
+	}
+
 private:
 	double Ksi(double xi, double h, double x)
 	{

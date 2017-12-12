@@ -19,7 +19,7 @@ void Task::matrixFilling()
 			{
 				if (!usedPoints[k] &&
 					grid.points[k].x >= grid.X[i] && grid.points[k].x <= grid.X[i + 1] &&
-					grid.points[k].y >= grid.Y[j] && grid.points[k].y <= grid.Y[j + 1]  )
+					grid.points[k].y >= grid.Y[j] && grid.points[k].y <= grid.Y[j + 1])
 				{
 					indexOfPoints.push_back(k);
 					usedPoints[k] = true;
@@ -65,7 +65,8 @@ void Task::matrixFilling()
 						a.setEl(indexInMatrix[ii], indexInMatrix[jj], basis.Psi(ii, grid.X[i], grid.Y[j],
 							hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*
 							basis.Psi(jj, grid.X[i], grid.Y[j],
-								hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y));
+								hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)
+							+ basis.secondComp(ii, hx)*basis.secondComp(jj, hy));
 					}
 					f[indexInMatrix[ii]] += basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
 						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*grid.F[indexOfPoints[k]];
