@@ -246,8 +246,8 @@ void LUsq_decomposition(matrix &LU)
 void MSG()
 {
 	At = Transpose(A);
-	r = mul_Matrix_Vector(f, At);	
-	z = r;							
+	r = mul_Matrix_Vector(f, At);
+	z = r;
 	e2 = norma(r) / norma(f);
 
 	for (k = 1; k < maxiter && e2 > eps; k++)
@@ -257,20 +257,25 @@ void MSG()
 		Azk1 = mul_Matrix_Vector(z, A);
 		Azk1 = mul_Matrix_Vector(Azk1, At);
 
-		a = scalar(r, r) / scalar(Azk1, z);	
+		a = scalar(r, r) / scalar(Azk1, z);
 
-		for (int i = 0; i < N; i++)	
+		for (int i = 0; i < N; i++)
 		{
 			x[i] += a*z[i];
 			r[i] -= a*Azk1[i];
 		}
-		b = scalar(r, r) / scalar(r1, r1);	
+		b = scalar(r, r) / scalar(r1, r1);
 		for (int i = 0; i < N; i++)
 		{
 			z[i] = r[i] + b*z1[i];
 		}
 
 		e2 = norma(r) / norma(f);
+	}
+	if (k == maxiter)
+	{
+		cout << "Вышел по макс. итерации, решение может быть неправильным" << endl;
+		cin.get();
 	}
 }
 
@@ -315,6 +320,11 @@ void MSG_LU()
 		e2 = norma(r) / norma(f);
 	}
 	x = Reverse_LU_U(x, LU);
+	if (k == maxiter)
+	{
+		cout << "Вышел по макс. итерации, решение может быть неправильным" << endl;
+		cin.get();
+	}
 }
 
 vector<double> makeSLAU(vector<double> &_di, vector<double> &_al, vector<double> &_au,
@@ -326,7 +336,7 @@ vector<double> makeSLAU(vector<double> &_di, vector<double> &_al, vector<double>
 	A.al = _al;
 	A.au = _au;
 	N = _di.size();
-	method2 = 1;
+	method2 = 2;
 	CreateMatrix(LU);
 	r.resize(N, 0);
 	f.resize(N);

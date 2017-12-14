@@ -66,9 +66,9 @@ void Task::matrixFilling()
 							hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*
 							basis.Psi(jj, grid.X[i], grid.Y[j],
 								hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)
-							/*alpha*/+0 * basis.secondComp(ii, hx)*basis.secondComp(jj, hy)
-							/*beta*/+0 * basis.thirdComp(ii, hx)*basis.thirdComp(jj, hy));/*
-						cout << basis.secondComp(ii, hx) << endl;
+							+ basis.secondComp(0, ii, jj, hx, hy)
+							+ basis.thirdComp(10e7, ii, jj, hx, hy));
+						/*cout << basis.secondComp(ii, hx) << endl;
 						cout << basis.secondComp(jj, hy) << endl;
 						cout << basis.secondComp(ii, hx)*basis.secondComp(jj, hx) << endl;
 						cin.get();*/
@@ -87,12 +87,12 @@ void Task::make()
 	a.profileDefining(list, grid);
 	f.resize(4 * grid.X.size() * grid.Y.size(), 0);
 	matrixFilling();
-	a.outMatrix();
+	//a.outMatrix();
 	result = makeSLAU(a.di, a.al, a.au, a.ia, a.ja, f);
 	/*ofstream out("Result.txt");
 	for (int i = 0; i < result.size(); ++i)
 	{
-		out << result[i] << endl;
+		out << f[i] << endl;
 	}
 	out.close();*/
 	printSpline(0.05, 0.05, result);

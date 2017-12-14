@@ -40,17 +40,19 @@ public:
 		return 2 * (int)((i) / 8) + ((int)((i) / 2) % 2);
 	}
 
-	double  secondComp(int i, double h)
+	double  secondComp(double alpha, int i, int j, double hx, double hy)
 	{
-		return secondCompMatrix(Nyu(i), Myu(i), h);
+		return alpha * (GCompMatrix(Myu(i),Myu(j),hx)*MCompMatrix(Nyu(i),Nyu(j),hy)
+			+ MCompMatrix(Myu(i), Myu(j), hx)*GCompMatrix(Nyu(i), Nyu(j), hy));
 	}
 
-	double  thirdComp(int i, double h)
+	double  thirdComp(double beta, int i, int j, double hx, double hy)
 	{
-		return thirdCompMatrix(Nyu(i), Myu(i), h);
+		return beta * (thirdCompMatrix(Myu(i), Myu(j), hx)*MCompMatrix(Nyu(i), Nyu(j), hy)
+			+ MCompMatrix(Myu(i), Myu(j), hx)*thirdCompMatrix(Nyu(i), Nyu(j), hy));
 	}
 
-	double secondCompMatrix(int i, int j, double h)
+	double GCompMatrix(int i, int j, double h)
 	{
 		int index = 4 * i + j;
 		double var;
@@ -112,7 +114,131 @@ public:
 		return var / (30 * h);
 	}
 
+	double MCompMatrix(int i, int j, double h)
+	{
+		int index = 4 * i + j;
+		double var = 0;
+		switch(index)
+		{
+		case 0:
+			var = 156;
+			break;
+		case 1:
+			var = 22 * h;
+			break;
+		case 2:
+			var = 54;
+			break;
+		case 3:
+			var = -13 * h;
+			break;
+		case 4:
+			var = 22 * h;
+			break;
+		case 5:
+			var = 4 * h *h;
+			break;
+		case 6:
+			var = 13 * h;
+			break;
+		case 7:
+			var = -3 * h * h;
+			break;
+		case 8:
+			var = 54;
+			break;
+		case 9:
+			var = 13 * h;
+			break;
+		case 10:
+			var = 156;
+			break;
+		case 11:
+			var = -22 * h;
+			break;
+		case 12:
+			var = -13 * h;
+			break;
+		case 13:
+			var = -3 * h * h;
+			break;
+		case 14:
+			var = -22 * h;
+			break;
+		case 15:
+			var = 4 * h * h;
+			break;
+		default:
+			cout << "TY CHE DAUN?" << endl;
+			cin.get();
+			break;
+		}
+		return var * h / 420;
+	}
+
 	double thirdCompMatrix(int i, int j, double h)
+	{
+		int index = 4 * i + j;
+		double var;
+		switch (index)
+		{
+		case 0:
+			var = 12 / (h*h*h);
+			break;
+		case 1:
+			var = 6 / (h*h);
+			break;
+		case 2:
+			var = -12 / (h*h*h);
+			break;
+		case 3:
+			var = 6 / (h*h);
+			break;
+		case 4:
+			var = 6 / (h*h);
+			break;
+		case 5:
+			var = 4 / (h);
+			break;
+		case 6:
+			var = -6 / (h*h);
+			break;
+		case 7:
+			var = 2 / (h);
+			break;
+		case 8:
+			var = -12 / (h*h*h);
+			break;
+		case 9:
+			var = -6 / (h*h);
+			break;
+		case 10:
+			var = 12 / (h*h*h);
+			break;
+		case 11:
+			var = -6 / (h*h);
+			break;
+		case 12:
+			var = 6 / (h*h);
+			break;
+		case 13:
+			var = 2 /(h);
+			break;
+		case 14:
+			var = -6 / (h*h);
+			break;
+		case 15:
+			var = 4 / (h);
+			break;
+		default:
+			cout << "TY CHE DAUN?" << endl;
+			cin.get();
+			break;
+		}
+		return var/h;
+	}
+
+	/*double thirdCompMatrix(int i, int j, double h)
 	{
 		int index = 4 * i + j;
 		double var;
@@ -172,7 +298,7 @@ public:
 			break;
 		}
 		return var;
-	}
+	}*/
 
 private:
 	double Ksi(double xi, double h, double x)
