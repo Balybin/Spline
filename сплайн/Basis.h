@@ -7,6 +7,10 @@ class Basis
 {
 
 public:
+	double F(double x, double y)
+	{
+		return x*x*x;
+	}
 	double Psi(int i, double x, double y, double hx, double hy, double xi, double yi)
 	{
 		return Fi(Myu(i), xi, hx, x)*Fi(Nyu(i), yi, hy, y);
@@ -235,10 +239,10 @@ public:
 			cin.get();
 			break;
 		}
-		return var/h;
+		return var;
 	}
 
-	/*double thirdCompMatrix(int i, int j, double h)
+	double wrongThirdCompMatrix(int i, int j, double h)
 	{
 		int index = 4 * i + j;
 		double var;
@@ -298,12 +302,12 @@ public:
 			break;
 		}
 		return var;
-	}*/
+	}
 
 private:
 	double Ksi(double xi, double h, double x)
 	{
-		return (x - xi) / h;
+		return (xi - x) / h;
 	}
 	double Fi(int i, double xi, double h, double x)
 	{

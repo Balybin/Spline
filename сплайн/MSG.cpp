@@ -96,10 +96,10 @@ void LOS()
 	if (k == MaxNumIter)
 	{
 		cout << "Вышел по макс. итерации, решение может быть неправильным"<< endl;
-		
+		cout << "количество итераций - " << k << endl;
+		cin.get();
 	}
-	cout << "количество итераций - " << k << endl;
-	cin.get();
+	
 }
 
 vector<double> makeSLAU(vector<double> &_di, vector<double> &_al, vector<double> &_au,

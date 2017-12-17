@@ -3,6 +3,7 @@
 
 void Task::matrixFilling()
 {
+	ofstream file("right.txt");
 	int sizeX = grid.X.size() - 1, sizeY = grid.Y.size() - 1;
 	double hx, hy;
 	double localMatrix[4][4];
@@ -62,40 +63,86 @@ void Task::matrixFilling()
 				{
 					for (int jj = 0; jj < 16; ++jj)
 					{
-						a.setEl(indexInMatrix[ii], indexInMatrix[jj], basis.Psi(ii, grid.X[i], grid.Y[j],
+						a.setEl(indexInMatrix[ii], indexInMatrix[jj], grid.omega[k]*basis.Psi(ii, grid.X[i], grid.Y[j],
 							hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*
-							basis.Psi(jj, grid.X[i], grid.Y[j],
-								hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)
+							basis.Psi(jj, grid.X[i], grid.Y[j], hx, hy, 
+								grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)
 							+ basis.secondComp(0, ii, jj, hx, hy)
-							+ basis.thirdComp(10e7, ii, jj, hx, hy));
-						/*cout << basis.secondComp(ii, hx) << endl;
-						cout << basis.secondComp(jj, hy) << endl;
-						cout << basis.secondComp(ii, hx)*basis.secondComp(jj, hx) << endl;
-						cin.get();*/
+							+ basis.thirdComp(1e7, ii, jj, hx, hy));
 					}
 					f[indexInMatrix[ii]] += basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
-						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*grid.F[indexOfPoints[k]];
+						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*(grid.F[indexOfPoints[k]]+grid.error[k]);
+					file << basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
+						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*grid.F[indexOfPoints[k]] << "\t";
 				}
+				file << endl;
 			}
 		}
 	}
+	file.close();
 }
 void Task::make()
 {
+	
 	vector<double> result;
 	grid.input();
 	a.profileDefining(list, grid);
 	f.resize(4 * grid.X.size() * grid.Y.size(), 0);
-	matrixFilling();
-	//a.outMatrix();
-	result = makeSLAU(a.di, a.al, a.au, a.ia, a.ja, f);
-	/*ofstream out("Result.txt");
+	double meanDev = meanDeviation();
+	bool flag = true;
+	while (flag)
+	{
+		flag = false;
+		matrixFilling();
+		result = makeSLAU(a.di, a.al, a.au, a.ia, a.ja, f);
+		for (int i = 0; i < grid.points.size(); ++i)
+		{
+			if (grid.error[i] > 3 * valueInPoint(grid.points[i].x, grid.points[i].y, result))
+			{
+				flag = true;
+				grid.omega[i] /= 2;
+			}
+		}
+		a.nullMatrix();
+	}
+	a.outMatrix();
+	ofstream out("Result.txt");
 	for (int i = 0; i < result.size(); ++i)
 	{
-		out << f[i] << endl;
+		out << result[i] << endl;
 	}
-	out.close();*/
+	out.close();
 	printSpline(0.05, 0.05, result);
+}
+double Task::meanDeviation()
+{
+	double sum;
+	for (int i = 0; i < grid.error.size(); ++i)
+		sum += abs(grid.error[i]);
+	sum /= grid.error.size();
+	return sum;
+}
+
+double Task::valueInPoint(double x, double y, vector<double> result)
+{
+	int maxI = grid.X.size() - 1, maxJ = grid.Y.size() - 1;
+	int i = 0, j = 0;
+	double summ=0;
+	while (grid.X[i] < x && i < maxI - 1)
+		++i;
+	if (i > 0) --i;
+	double hx = grid.X[i + 1] - grid.X[i];
+	if (y > grid.Y[maxJ]) y = grid.Y[maxJ];
+	while (grid.Y[j] < y && j < maxJ - 1)
+		++j;
+	if (j > 0) --j;
+	double hy = grid.Y[j + 1] - grid.Y[j];
+	int NumOfEl = 4 * grid.calculatePosistion(i, j);
+	for (int k = 0; k < 16; ++k)
+	{
+		summ += result[NumOfEl + k] * basis.Psi(k, grid.X[i], grid.Y[j], hx, hy, x, y);
+	}
+	return summ;
 }
 
 void Task::printSpline(double hx, double hy, vector<double> result)
@@ -103,6 +150,7 @@ void Task::printSpline(double hx, double hy, vector<double> result)
 	int maxI = grid.X.size() - 1, maxJ = grid.Y.size() - 1;
 	int kMax = grid.points.size();
 	ofstream outX("SplineX.txt");
+	ofstream layer("layer.txt");
 	ofstream outF("SplineF.txt");
 	ofstream outY("SplineY.txt");
 	vector<bool> isUsed;
@@ -129,6 +177,10 @@ void Task::printSpline(double hx, double hy, vector<double> result)
 			{
 				summ += result[NumOfEl + k] * basis.Psi(k, grid.X[i], grid.Y[j], hXforBasis, hYforBasis, x, y);
 			}
+			/*if (i == 0)
+			{
+				layer << summ << endl;
+			}*/
 			if(y == grid.Y[0]) outX << x << endl;
 			outF << summ << endl;
 		}

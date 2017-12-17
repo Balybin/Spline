@@ -38,25 +38,24 @@ void Grid::input()
 		Y.push_back(buf);
 	}
 
-	file >> Qf;
+	/*file >> Qf;
 	Point Pbuf;
 	for (int i = 0; i < Qf; ++i)
 	{
 		file >> Pbuf.x >> Pbuf.y >> buf;
 		F.push_back(buf);
 		points.push_back(Pbuf);
-	}
-	normal_distribution<double> distr(0, 1);
-	/*for (double y = -2; y < 2 + 1e-10; y += 2)
+	}*/
+	//normal_distribution<double> distr(0, 1);
+	for (double y = -2; y < 2 + 1e-10; y += 1)
 	{
-		for (double x = -2; x < 2 + 1e-10; x += 2)
+		for (double x = -2; x < 2 + 1e-10; x += 1)
 		{
 			Point point;
 			point.x = x; point.y = y;
 			points.push_back(point);
-			F.push_back(x*x*x);
-		}*/
-	//
-	//}
+			F.push_back(x*x*x*x*x);
+		}
+	}
 	file.close();
 }
