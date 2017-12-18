@@ -67,10 +67,10 @@ void Task::matrixFilling()
 							hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*
 							basis.Psi(jj, grid.X[i], grid.Y[j], hx, hy, 
 								grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)
-							+ basis.secondComp(0, ii, jj, hx, hy)
-							+ basis.thirdComp(1e7, ii, jj, hx, hy));
+							+ basis.secondComp(1e-3, ii, jj, hx, hy)
+							+ basis.thirdComp(0, ii, jj, hx, hy));
 					}
-					f[indexInMatrix[ii]] += basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
+					f[indexInMatrix[ii]] += grid.omega[k] * basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
 						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*(grid.F[indexOfPoints[k]]+grid.error[k]);
 					file << basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
 						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*grid.F[indexOfPoints[k]] << "\t";
@@ -83,46 +83,52 @@ void Task::matrixFilling()
 }
 void Task::make()
 {
-	
 	vector<double> result;
 	grid.input();
 	a.profileDefining(list, grid);
 	f.resize(4 * grid.X.size() * grid.Y.size(), 0);
-	double meanDev = meanDeviation();
+	double meanDev;
 	bool flag = true;
-	while (flag)
+	for(int k = 0; flag; ++k)
 	{
 		flag = false;
+		a.nullMatrix();
+		nullVector(f);
 		matrixFilling();
 		result = makeSLAU(a.di, a.al, a.au, a.ia, a.ja, f);
+		meanDev = meanDeviation(result);
 		for (int i = 0; i < grid.points.size(); ++i)
 		{
-			if (grid.error[i] > 3 * valueInPoint(grid.points[i].x, grid.points[i].y, result))
+			double abso = abs(grid.F[i] + grid.error[i] - valueInPoint(grid.points[i].x, grid.points[i].y, result));
+			if (abso > 2 * meanDev)
 			{
 				flag = true;
-				grid.omega[i] /= 2;
+				grid.omega[i] /= 1.5;
 			}
 		}
-		a.nullMatrix();
+		printSpline(0.05, 0.05, result, k);
 	}
-	a.outMatrix();
+	//a.outMatrix();
 	ofstream out("Result.txt");
 	for (int i = 0; i < result.size(); ++i)
 	{
 		out << result[i] << endl;
 	}
 	out.close();
-	printSpline(0.05, 0.05, result);
 }
-double Task::meanDeviation()
+double Task::meanDeviation(vector<double> result)
 {
-	double sum;
+	double sum=0;
 	for (int i = 0; i < grid.error.size(); ++i)
-		sum += abs(grid.error[i]);
+		sum += abs(grid.error[i]+grid.F[i]-valueInPoint(grid.points[i].x,grid.points[i].y,result));
 	sum /= grid.error.size();
 	return sum;
 }
-
+void Task::nullVector(vector<double> a)
+{
+	for (int i = 0; i < a.size(); ++i)
+		a[i] = 0;
+}
 double Task::valueInPoint(double x, double y, vector<double> result)
 {
 	int maxI = grid.X.size() - 1, maxJ = grid.Y.size() - 1;
@@ -145,17 +151,15 @@ double Task::valueInPoint(double x, double y, vector<double> result)
 	return summ;
 }
 
-void Task::printSpline(double hx, double hy, vector<double> result)
+void Task::printSpline(double hx, double hy, vector<double> result, int numberOfFile)
 {
 	int maxI = grid.X.size() - 1, maxJ = grid.Y.size() - 1;
 	int kMax = grid.points.size();
 	ofstream outX("SplineX.txt");
-	ofstream layer("layer.txt");
-	ofstream outF("SplineF.txt");
+	//ofstream layer("layer.txt");
+	ofstream outF(std::to_string(numberOfFile) + "SplineF.txt");
 	ofstream outY("SplineY.txt");
-	vector<bool> isUsed;
 	vector<int> indexesOfPoints;
-	isUsed.resize(kMax, false);
 	double summ,hXforBasis,hYforBasis;
 	for (double y = grid.Y[0]; y < grid.Y[maxJ] + 1e-10; y += hy)
 	{
@@ -181,10 +185,10 @@ void Task::printSpline(double hx, double hy, vector<double> result)
 			{
 				layer << summ << endl;
 			}*/
-			if(y == grid.Y[0]) outX << x << endl;
+			if(y == grid.Y[0] && numberOfFile == 0) outX << x << endl;
 			outF << summ << endl;
 		}
-		outY << y << endl;
+		if(numberOfFile == 0)	outY << y << endl;
 	}
 	outF.close();
 	outX.close();

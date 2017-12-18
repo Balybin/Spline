@@ -17,6 +17,18 @@ void Matrix::outMatrix()
 		out << endl;
 	}
 }
+void Matrix::nullMatrix()
+{
+	for (int i = 0; i < al.size(); ++i)
+	{
+		al[i] = 0;
+		au[i] = 0;
+	}
+	for (int i = 0; i < di.size(); ++i)
+	{
+		di[i] = 0;
+	}
+}
 double Matrix::GetEl(int i, int j)
 {
 	if (i == j)

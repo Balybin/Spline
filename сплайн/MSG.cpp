@@ -101,33 +101,47 @@ void LOS()
 	}
 	
 }
-
+void nullVector(vector<double> a)
+{
+	for (int i = 0; i < a.size(); ++i)
+		a[i] = 0;
+}
 vector<double> makeSLAU(vector<double> &_di, vector<double> &_al, vector<double> &_au,
 	vector<int> &_ia, vector<int> &_ja, vector<double> &_F)
 {
-	ig.resize(N + 1);
-	di.resize(N);
-	ggl.resize(ig[N]);
-	ggu.resize(ig[N]);
-	jg.resize(ig[N]);
+	ig.resize(N + 1, 0);
+	di.resize(N, 0);
+	ggl.resize(ig[N], 0);
+	ggu.resize(ig[N], 0);
+	jg.resize(ig[N], 0);
 	ig = _ia;
 	jg = _ja;
 	di = _di;
 	ggl = _al;
 	ggu = _au;
 	N = _di.size();
-	
-	vec.resize(N);
-	x0.resize(N);
-	alpha_k.resize(N);
-	beta_k.resize(N);
-	r_k.resize(N);
-	z_k.resize(N);
-	x_k.resize(N);
-	q_k.resize(N);
-	p_k.resize(N);
-	Az.resize(N);
-	Ax.resize(N);
+	vec.resize(N,0);
+	x0.resize(N, 0);
+	alpha_k.resize(N, 0);
+	beta_k.resize(N, 0);
+	r_k.resize(N, 0);
+	z_k.resize(N, 0);
+	x_k.resize(N, 0);
+	q_k.resize(N, 0);
+	p_k.resize(N, 0);
+	Az.resize(N, 0);
+	Ax.resize(N, 0);
+	nullVector(vec);
+	nullVector(x0);
+	nullVector(alpha_k);
+	nullVector(beta_k);
+	nullVector(r_k);
+	nullVector(z_k);
+	nullVector(x_k);
+	nullVector(q_k);
+	nullVector(p_k);
+	nullVector(Az);
+	nullVector(Ax);
 	vec = _F;
 	LOS();
 	return x_k;

@@ -46,16 +46,23 @@ void Grid::input()
 		F.push_back(buf);
 		points.push_back(Pbuf);
 	}*/
-	//normal_distribution<double> distr(0, 1);
+	//double error,;
+	normal_distribution<double> distr(0, 1);
+	default_random_engine generator;
 	for (double y = -2; y < 2 + 1e-10; y += 1)
 	{
 		for (double x = -2; x < 2 + 1e-10; x += 1)
 		{
+			error.push_back(distr(generator));//допилить выброс
 			Point point;
 			point.x = x; point.y = y;
 			points.push_back(point);
-			F.push_back(x*x*x*x*x);
+			F.push_back(basis.F(x,y));
+			omega.push_back(1);
+			
 		}
 	}
+	F[6] += 5;
+	F[21] += 5;
 	file.close();
 }
