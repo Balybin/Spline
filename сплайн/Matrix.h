@@ -12,4 +12,5 @@ public:
 	void profileDefining(ListOfAdjacency listOfAdjacency, Grid grid);
 	void outMatrix();
 	double GetEl(int i, int j);
+	void nullMatrix();
 };

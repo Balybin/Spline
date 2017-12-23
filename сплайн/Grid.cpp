@@ -46,7 +46,6 @@ void Grid::input()
 		F.push_back(buf);
 		points.push_back(Pbuf);
 	}*/
-	//double error,;
 	normal_distribution<double> distr(0, 1);
 	default_random_engine generator;
 	for (double y = -2; y < 2 + 1e-10; y += 1)
@@ -62,7 +61,7 @@ void Grid::input()
 			
 		}
 	}
-	F[6] += 5;
-	F[21] += 5;
+	//error[6] += 100;
+	//error[21] += 100;
 	file.close();
 }

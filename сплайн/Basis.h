@@ -19,22 +19,7 @@ public:
 	{
 		return Fi(i, xi, hx, x);
 	}
-	/*double Psi(Grid grid, int k, double xi, double yi)
-	{
-		int i = 0, j = 0;
-		if (xi<grid.X[0] || xi>grid.X[grid.X.size() - 1] || yi<grid.Y[0] || yi>grid.Y[grid.Y.size() - 1])
-		{
-			cout << "Error in func Psi. Press any key to exit." << endl;
-			cin.get();
-			system("exit");
-		}
-		while (grid.X[i] <= xi)
-			++i;
-		while (grid.Y[j] <= yi)
-			++j;
-		return Psi(k, grid.X[i - 1], grid.Y[j - 1], grid.X[i] - grid.X[i - 1], grid.Y[j] - grid.Y[j - 1], xi, yi);
-
-	}*/
+	
 	int Myu(int i)
 	{
 		return 2 * ((int)((i) / 4) % 2) + ((i) % 2);
@@ -307,7 +292,7 @@ public:
 private:
 	double Ksi(double xi, double h, double x)
 	{
-		return (xi - x) / h;
+		return abs(x - xi) / h;
 	}
 	double Fi(int i, double xi, double h, double x)
 	{

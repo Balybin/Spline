@@ -1,6 +1,6 @@
 #pragma once
 #include "Task.h"
-
+double alpha = 1e-5, beta = 0, coef = 3.5, divCoef = 1.5;
 void Task::matrixFilling()
 {
 	ofstream file("right.txt");
@@ -67,13 +67,13 @@ void Task::matrixFilling()
 							hx, hy, grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*
 							basis.Psi(jj, grid.X[i], grid.Y[j], hx, hy, 
 								grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)
-							+ basis.secondComp(1e-3, ii, jj, hx, hy)
-							+ basis.thirdComp(0, ii, jj, hx, hy));
+							+ basis.secondComp(alpha, ii, jj, hx, hy)
+							+ basis.thirdComp(beta, ii, jj, hx, hy));
 					}
 					f[indexInMatrix[ii]] += grid.omega[k] * basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
 						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*(grid.F[indexOfPoints[k]]+grid.error[k]);
-					file << basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
-						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*grid.F[indexOfPoints[k]] << "\t";
+					/*file << basis.Psi(ii, grid.X[i], grid.Y[j], hx, hy,
+						grid.points[indexOfPoints[k]].x, grid.points[indexOfPoints[k]].y)*grid.F[indexOfPoints[k]] << "\t";*/
 				}
 				file << endl;
 			}
@@ -89,7 +89,8 @@ void Task::make()
 	f.resize(4 * grid.X.size() * grid.Y.size(), 0);
 	double meanDev;
 	bool flag = true;
-	for(int k = 0; flag; ++k)
+	int k = 0;
+	for(; flag; ++k)
 	{
 		flag = false;
 		a.nullMatrix();
@@ -99,32 +100,37 @@ void Task::make()
 		meanDev = meanDeviation(result);
 		for (int i = 0; i < grid.points.size(); ++i)
 		{
-			double abso = abs(grid.F[i] + grid.error[i] - valueInPoint(grid.points[i].x, grid.points[i].y, result));
-			if (abso > 2 * meanDev)
+			double abso = abs(grid.omega[i]*(grid.F[i] + grid.error[i]) - valueInPoint(grid.points[i].x, grid.points[i].y, result));
+			if (abso > coef * meanDev + 1e-7)
 			{
 				flag = true;
-				grid.omega[i] /= 1.5;
+				grid.omega[i] /= divCoef;
+				cout << grid.points[i].x << "\t" << grid.points[i].y << "\t" << valueInPoint(grid.points[i].x, grid.points[i].y, result) << endl;
 			}
 		}
 		printSpline(0.05, 0.05, result, k);
+		cout << endl;
 	}
+	ofstream outK("k.txt");
+	outK << k-1 << endl;
+	outK.close();
 	//a.outMatrix();
-	ofstream out("Result.txt");
+	/*ofstream out("Result.txt");
 	for (int i = 0; i < result.size(); ++i)
 	{
 		out << result[i] << endl;
 	}
-	out.close();
+	out.close();*/
 }
 double Task::meanDeviation(vector<double> result)
 {
 	double sum=0;
 	for (int i = 0; i < grid.error.size(); ++i)
-		sum += abs(grid.error[i]+grid.F[i]-valueInPoint(grid.points[i].x,grid.points[i].y,result));
+		sum += abs(grid.omega[i]*(grid.error[i]+grid.F[i])-valueInPoint(grid.points[i].x,grid.points[i].y,result));
 	sum /= grid.error.size();
 	return sum;
 }
-void Task::nullVector(vector<double> a)
+void Task::nullVector(vector<double> &a)
 {
 	for (int i = 0; i < a.size(); ++i)
 		a[i] = 0;
@@ -155,10 +161,14 @@ void Task::printSpline(double hx, double hy, vector<double> result, int numberOf
 {
 	int maxI = grid.X.size() - 1, maxJ = grid.Y.size() - 1;
 	int kMax = grid.points.size();
-	ofstream outX("SplineX.txt");
+	ofstream outX;
+	if(numberOfFile==0)
+		outX.open("SplineX.txt");
 	//ofstream layer("layer.txt");
 	ofstream outF(std::to_string(numberOfFile) + "SplineF.txt");
-	ofstream outY("SplineY.txt");
+	ofstream outY;
+	if (numberOfFile == 0)
+		outY.open("SplineY.txt");
 	vector<int> indexesOfPoints;
 	double summ,hXforBasis,hYforBasis;
 	for (double y = grid.Y[0]; y < grid.Y[maxJ] + 1e-10; y += hy)
@@ -185,12 +195,16 @@ void Task::printSpline(double hx, double hy, vector<double> result, int numberOf
 			{
 				layer << summ << endl;
 			}*/
-			if(y == grid.Y[0] && numberOfFile == 0) outX << x << endl;
+			if(y == grid.Y[0] && numberOfFile == 0) 
+				outX << x << endl;
 			outF << summ << endl;
 		}
-		if(numberOfFile == 0)	outY << y << endl;
+		if(numberOfFile == 0)
+			outY << y << endl;
 	}
 	outF.close();
-	outX.close();
-	outY.close();
+	if (numberOfFile == 0)
+		outX.close();
+	if (numberOfFile == 0)
+		outY.close();
 }
